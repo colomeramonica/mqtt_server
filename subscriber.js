@@ -28,23 +28,17 @@ function onConnect() {
 function onConnectionLost(responseObject) {
     document.getElementById("messages").innerHTML += '<span>ERROR: Conexão perdida</span><br/>';
     if (responseObject.errorCode !== 0) {
-        document.getElementById("messages").innerHTML += '<span>ERROR: ' + + responseObject.errorMessage + '</span><br/>';
+        document.getElementById("messages").innerHTML += '<span>ERROR: ' + responseObject.errorMessage + '</span><br/>';
     }
 }
 
 function onMessageArrived(message) {
     console.log("onMessageArrived: " + message.payloadString);
     document.getElementById("messages").innerHTML += '<span>Mensagem recebida: ' + message.payloadString + '</span><br/>';
-
-    // this.response(message);
+    message = new Paho.MQTT.Message((message.payloadString) + " js");
+    message.destinationName = topic;
+    client.send(message);
 }
-
-// function response(message) {
-//     client.subscribe("testtopic/1");
-//     message = new Paho.MQTT.Message(parseInt(message.payloadString) + 2);
-//     message.destinationName = "testtopic/1";
-//     client.send(message);
-// }
 
 function startDisconnect() {
     client.disconnect();
